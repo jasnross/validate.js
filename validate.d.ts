@@ -135,12 +135,12 @@ declare namespace validate {
   };
 
   export interface ValidateJS {
-    <TAttributes, TConstraints>(
+    <TAttributes = any, TConstraints = any>(
       attributes: TAttributes,
       constraints: TConstraints,
       options?: ValidateOption
     ): any;
-    validate<TAttributes, TConstraints>(
+    validate<TAttributes = any, TConstraints = any>(
       attributes: TAttributes,
       constraints: TConstraints,
       options?: ValidateOption
