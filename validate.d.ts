@@ -128,6 +128,8 @@ declare namespace validate {
     url?: UrlConstraint;
   };
 
+  export type SingleConstraints = Constraints<any, any>;
+
   export type ConstraintsMapping<T> = {
     [P in keyof Partial<T>]: Constraints<T, P>
   };
@@ -148,9 +150,9 @@ declare namespace validate {
       constraints: TConstraints,
       options?: AsyncValidateOption
     ): Promise<any>;
-    single<TConstraints>(
+    single(
       value: any,
-      constraints: any,
+      constraints: SingleConstraints,
       options?: ValidateOption
     ): any;
 
