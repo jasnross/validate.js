@@ -46,44 +46,44 @@ declare namespace validate {
     trim?: boolean;
   }
 
-  export type DateTimeValidator =
+  export type DateTimeConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         dateOnly: boolean;
       };
 
-  export type PresenceValidator =
+  export type PresenceConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         allowEmpty?: boolean;
       };
 
-  export type EmailValidator = boolean;
+  export type EmailConstraint = boolean;
 
-  export type EqualityValidator<T, P> =
+  export type EqualityConstraint<T, P> =
     | Diff<FilterPropNames<T, T[P]>, P>
     | ConstraintOptionsCommon & {
         attribute: Diff<FilterPropNames<T, T[P]>, P>;
         comparator?: (v1: T[P], v2: T[P]) => boolean;
       };
 
-  export type ExclusionValidator<T, P> =
+  export type ExclusionConstraint<T, P> =
     | T[P][]
     | ConstraintOptionsCommon & {
         within: { [key: string]: string };
       };
 
   // Inclusion API is the same as the exclusion API
-  export type InclusionValidator<T, P> = ExclusionValidator<T, P>;
+  export type InclusionConstraint<T, P> = ExclusionConstraint<T, P>;
 
-  export type FormatValidator =
+  export type FormatConstraint =
     | RegExp
     | ConstraintOptionsCommon & {
         pattern: string;
         flags?: string;
       };
 
-  export type LengthValidator<T extends keyof Object, P extends String> = {
+  export type LengthConstraint<T, P> = {
     is?: number;
     minimum?: number;
     maximum?: number;
@@ -91,7 +91,7 @@ declare namespace validate {
     tokenizer?: (value: T[P]) => T[P][];
   };
 
-  export type NumericalityValidator =
+  export type NumericalityConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         strict?: boolean;
@@ -107,29 +107,29 @@ declare namespace validate {
         even?: boolean;
       };
 
-  export type UrlValidator =
+  export type UrlConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         schemes?: RegExp | string[];
         allowLocal?: boolean;
       };
 
-  export type ValidateJSValidators<T, P> = {
-    email?: EmailValidator;
-    presence?: PresenceValidator;
-    date?: DateTimeValidator;
-    datetime?: DateTimeValidator;
-    equality?: EqualityValidator<T, P>;
-    exclusion?: ExclusionValidator<T, P>;
-    format?: FormatValidator;
-    inclusion?: InclusionValidator<T, P>;
-    length?: LengthValidator<T, P>;
-    numericality?: NumericalityValidator;
-    url?: UrlValidator;
+  export type Constraints<T, P> = {
+    email?: EmailConstraint;
+    presence?: PresenceConstraint;
+    date?: DateTimeConstraint;
+    datetime?: DateTimeConstraint;
+    equality?: EqualityConstraint<T, P>;
+    exclusion?: ExclusionConstraint<T, P>;
+    format?: FormatConstraint;
+    inclusion?: InclusionConstraint<T, P>;
+    length?: LengthConstraint<T, P>;
+    numericality?: NumericalityConstraint;
+    url?: UrlConstraint;
   };
 
-  export type ValidateJSConstraints<T> = {
-    [P in keyof Partial<T>]: ValidateJSValidators<T, P>
+  export type ConstraintsMapping<T> = {
+    [P in keyof Partial<T>]: Constraints<T, P>
   };
 
   export interface ValidateJS {
