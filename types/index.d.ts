@@ -185,4 +185,5 @@ declare namespace validate {
 }
 
 declare const validate: validate.ValidateJS;
+
 export = validate;
