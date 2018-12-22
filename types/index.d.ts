@@ -134,22 +134,24 @@ declare namespace validate {
     [P in keyof Partial<T>]: Constraints<T, P>
   };
 
+  export type ValidateResult<T> = { [P in keyof Partial<T>]?: string[] };
+
   export interface ValidateJS {
     <TAttributes = any, TConstraints = any>(
       attributes: TAttributes,
       constraints: TConstraints,
       options?: ValidateOption
-    ): any;
+    ): ValidateResult<TAttributes>;
     validate<TAttributes = any, TConstraints = any>(
       attributes: TAttributes,
       constraints: TConstraints,
       options?: ValidateOption
-    ): any;
+    ): ValidateResult<TAttributes>;
     async<TAttributes, TConstraints>(
       attributes: TAttributes,
       constraints: TConstraints,
       options?: AsyncValidateOption
-    ): Promise<any>;
+    ): Promise<ValidateResult<TAttributes>>;
     single(
       value: any,
       constraints: SingleConstraints,
