@@ -1,19 +1,26 @@
 // Namespace
 declare namespace validate {
-  export interface AsyncValidateOption {
-    wrapErrors?: Function;
-    prettify?: Function;
+  type PrettifyFn = (input: string) => string;
+
+  interface AsyncValidateOption {
+    wrapErrors?: (
+      errors: any,
+      options: any,
+      attributes: any,
+      constraints: any
+    ) => any;
+    prettify?: PrettifyFn;
     cleanAttributes?: boolean;
   }
 
-  export interface CollectFormValuesOption {
+  interface CollectFormValuesOption {
     nullify?: boolean;
     trim?: boolean;
   }
 
-  export interface ValidateOption {
+  interface ValidateOption {
     format?: string;
-    prettify?: Function;
+    prettify?: PrettifyFn;
     fullMessages?: boolean;
   }
 
@@ -25,49 +32,32 @@ declare namespace validate {
 
   type Diff<T, U> = T extends U ? never : T;
 
-  type ConstraintOptionsCommon = {
+  interface ConstraintOptionsCommon {
     message?: string;
-  };
-
-  export interface ValidateOption {
-    format?: string;
-    prettify?: Function;
-    fullMessages?: boolean;
   }
 
-  export interface AsyncValidateOption {
-    wrapErrors?: Function;
-    prettify?: Function;
-    cleanAttributes?: boolean;
-  }
-
-  export interface CollectFormValuesOption {
-    nullify?: boolean;
-    trim?: boolean;
-  }
-
-  export type DateTimeConstraint =
+  type DateTimeConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         dateOnly: boolean;
       };
 
-  export type PresenceConstraint =
+  type PresenceConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         allowEmpty?: boolean;
       };
 
-  export type EmailConstraint = boolean;
+  type EmailConstraint = boolean;
 
-  export type EqualityConstraint<T, P> =
+  type EqualityConstraint<T, P> =
     | Diff<FilterPropNames<T, T[P]>, P>
     | ConstraintOptionsCommon & {
         attribute: Diff<FilterPropNames<T, T[P]>, P>;
         comparator?: (v1: T[P], v2: T[P]) => boolean;
       };
 
-  export type ExclusionConstraint<T, P> =
+  type ExclusionConstraint<T, P> =
     | T[P][]
     | ConstraintOptionsCommon & {
         within: { [key: string]: string };
@@ -76,14 +66,14 @@ declare namespace validate {
   // Inclusion API is the same as the exclusion API
   export type InclusionConstraint<T, P> = ExclusionConstraint<T, P>;
 
-  export type FormatConstraint =
+  type FormatConstraint =
     | RegExp
     | ConstraintOptionsCommon & {
         pattern: string;
         flags?: string;
       };
 
-  export type LengthConstraint<T, P> = {
+  type LengthConstraint<T, P> = {
     is?: number;
     minimum?: number;
     maximum?: number;
@@ -91,7 +81,7 @@ declare namespace validate {
     tokenizer?: (value: T[P]) => T[P][];
   };
 
-  export type NumericalityConstraint =
+  type NumericalityConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         strict?: boolean;
@@ -107,14 +97,14 @@ declare namespace validate {
         even?: boolean;
       };
 
-  export type UrlConstraint =
+  type UrlConstraint =
     | boolean
     | ConstraintOptionsCommon & {
         schemes?: RegExp | string[];
         allowLocal?: boolean;
       };
 
-  export type Constraints<T, P> = {
+  type Constraints<T, P> = {
     email?: EmailConstraint;
     presence?: PresenceConstraint;
     date?: DateTimeConstraint;
@@ -128,15 +118,13 @@ declare namespace validate {
     url?: UrlConstraint;
   };
 
-  export type SingleConstraints = Constraints<any, any>;
+  type SingleConstraints = Constraints<any, any>;
 
-  export type ConstraintsMapping<T> = {
-    [P in keyof Partial<T>]: Constraints<T, P>
-  };
+  type ConstraintsMapping<T> = { [P in keyof Partial<T>]: Constraints<T, P> };
 
-  export type ValidateResult<T> = { [P in keyof Partial<T>]?: string[] };
+  type ValidateResult<T> = { [P in keyof Partial<T>]?: string[] };
 
-  export interface ValidateJS {
+  interface ValidateJS {
     <TAttributes = any, TConstraints = any>(
       attributes: TAttributes,
       constraints: TConstraints,
